@@ -1,0 +1,38 @@
+{
+  "name": "booking_widget_effect",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier -w .",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@effect/platform-browser": "^4.0.0-beta.83",
+    "@foldkit/devtools": "^0.114.0",
+    "@foldkit/ui": "^0.114.0",
+    "@tailwindcss/vite": "^4.3.1",
+    "clsx": "^2.1.1",
+    "effect": "^4.0.0-beta.83",
+    "foldkit": "^0.114.0",
+    "tailwindcss": "^4.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@foldkit/devtools-mcp": "^0.12.0",
+    "@foldkit/vite-plugin": "^0.9.0",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@typescript-eslint/eslint-plugin": "^8.61.1",
+    "@typescript-eslint/parser": "^8.61.1",
+    "eslint": "^10.5.0",
+    "happy-dom": "^20.10.6",
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.9"
+  }
+}

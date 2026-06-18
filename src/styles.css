@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+/* Dark mode driven by a `.dark` class on the widget root (set from model.theme),
+   not by the OS media query — so the in-app theme toggle is the source of truth. */
+@custom-variant dark (&:where(.dark, .dark *));
