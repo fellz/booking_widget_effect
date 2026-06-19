@@ -2,6 +2,8 @@
 
 🇷🇺 [Читать на русском](./README-RU.md)
 
+🚀 **[Live demo](https://fellz.github.io/booking_widget_effect/)**
+
 A [foldkit](https://foldkit.dev) (The Elm Architecture + Effect-TS) reimplementation
 of the Vue 3 hotel booking widget in `../booking_widget`, built to measure how many
 of the original's **correctness holes** a TEA + Effect architecture closes structurally.
