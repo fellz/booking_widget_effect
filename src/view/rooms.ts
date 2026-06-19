@@ -4,9 +4,15 @@ import { type Html, html } from 'foldkit/html'
 import { formatPrice, messages } from '../i18n'
 import { ClickedRetryCalendar, ClickedRetryRooms, ClickedRoom, type Message } from '../message'
 import { type Model } from '../model'
-import { type Room } from '../domain/types'
+import { type Room, type RoomId } from '../domain/types'
 import { selectedAvailability, validate } from '../validation'
 import { badge, ghostButtonClass, spinner } from './components'
+
+// Room photos live in `public/` and are served under the configured base path
+// (`/` in dev, `/booking_widget_effect/` in the deployed build) — hence the
+// `import.meta.env.BASE_URL` prefix. Family reuses the comfort double-room photo.
+const roomImageUrl = (id: RoomId): string =>
+  `${import.meta.env.BASE_URL}${id === 'standard' ? 'standard' : 'comfort'}.jpg`
 
 const skeleton = (): Html => {
   const h = html<Message>()
@@ -60,30 +66,45 @@ const roomCard = (model: Model, room: Room): Html => {
     ],
     [
       h.div(
-        [h.Class('flex items-baseline justify-between gap-3')],
+        [h.Class('flex items-stretch gap-4')],
         [
-          h.h3([h.Class('text-lg font-semibold')], [room.name[model.locale]]),
-          badge<Message>(t.upToGuests(room.capacity)),
-        ],
-      ),
-      h.p(
-        [h.Class('mt-1 text-sm text-gray-500 dark:text-gray-400')],
-        [room.description[model.locale]],
-      ),
-      h.div(
-        [h.Class('mt-3 flex items-center justify-between gap-3')],
-        [
-          h.span(
-            [h.Class('text-base font-bold')],
+          h.img([
+            h.Class('h-auto w-28 shrink-0 self-stretch rounded-lg object-cover'),
+            h.Src(roomImageUrl(room.id)),
+            h.Alt(room.name[model.locale]),
+          ]),
+          h.div(
+            [h.Class('flex flex-1 flex-col')],
             [
-              formatPrice(model.locale, room.pricePerNight[model.locale]),
-              h.small(
-                [h.Class('ml-1 font-normal text-gray-500')],
-                [`/ ${t.perNight}`],
+              h.div(
+                [h.Class('flex items-baseline justify-between gap-3')],
+                [
+                  h.h3([h.Class('text-lg font-semibold')], [room.name[model.locale]]),
+                  badge<Message>(t.upToGuests(room.capacity)),
+                ],
+              ),
+              h.p(
+                [h.Class('mt-1 text-sm text-gray-500 dark:text-gray-400')],
+                [room.description[model.locale]],
+              ),
+              h.div(
+                [h.Class('mt-auto pt-3 flex items-center justify-between gap-3')],
+                [
+                  h.span(
+                    [h.Class('text-base font-bold')],
+                    [
+                      formatPrice(model.locale, room.pricePerNight[model.locale]),
+                      h.small(
+                        [h.Class('ml-1 font-normal text-gray-500')],
+                        [`/ ${t.perNight}`],
+                      ),
+                    ],
+                  ),
+                  badgeNode,
+                ],
               ),
             ],
           ),
-          badgeNode,
         ],
       ),
     ],
