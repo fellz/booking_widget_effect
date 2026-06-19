@@ -78,11 +78,14 @@ export const calendarView = (model: Model): Html => {
   const t = messages(model.locale)
   const window = availabilityWindow(model)
 
-  const firstCell = Calendar.subtractDays(
-    Calendar.firstOfMonth(model.visibleMonth),
-    mondayIndex(Calendar.firstOfMonth(model.visibleMonth)),
-  )
-  const days = Arr.makeBy(42, i => Calendar.addDays(firstCell, i))
+  const monthStart = Calendar.firstOfMonth(model.visibleMonth)
+  const leading = mondayIndex(monthStart)
+  const firstCell = Calendar.subtractDays(monthStart, leading)
+  // Render only as many weeks as the month spans (5 or 6) — a trailing row made
+  // entirely of next-month days is dropped, instead of always padding to 42 cells.
+  const cellCount =
+    Math.ceil((leading + Calendar.daysInMonth(monthStart.year, monthStart.month)) / 7) * 7
+  const days = Arr.makeBy(cellCount, i => Calendar.addDays(firstCell, i))
 
   const minMonth = Calendar.firstOfMonth(model.today)
   const maxMonth = Calendar.firstOfMonth(Calendar.addDays(model.today, HORIZON_DAYS))
