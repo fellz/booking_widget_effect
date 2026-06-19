@@ -1,5 +1,7 @@
 # booking_widget_effect
 
+🇷🇺 [Читать на русском](./README-RU.md)
+
 A [foldkit](https://foldkit.dev) (The Elm Architecture + Effect-TS) reimplementation
 of the Vue 3 hotel booking widget in `../booking_widget`, built to measure how many
 of the original's **correctness holes** a TEA + Effect architecture closes structurally.
@@ -21,17 +23,31 @@ See **[COMPARISON.md](./COMPARISON.md)** for the full audit-to-architecture mapp
 | i18n with exhaustive locale matching | `src/i18n.ts` |
 | View (foldkit `html` DSL + Tailwind) | `src/view/` |
 | Startup flags (`today`, theme) + runtime wiring | `src/main.ts`, `src/entry.ts` |
-| Tests — `Story` (update), `Scene` (view), pure validation | `src/*.test.ts` |
+| Tests — `Story` (update), `Scene` (view), pure validation, property-based datetime | `src/*.test.ts`, `src/domain/date.test.ts` |
 
 ## Commands
 
 ```bash
 npm run dev        # dev server at http://localhost:5173
-npm test           # 17 Story / Scene / validation tests
+npm test           # 32 Story / Scene / validation + property-based datetime tests
 npm run typecheck  # tsc --noEmit
 npm run build      # production build
 npm run lint       # eslint
 ```
+
+## Property-based testing
+
+The pure datetime core in `src/domain/date.ts` is covered by
+[fast-check](https://github.com/dubzzz/fast-check) property tests in
+`src/domain/date.test.ts` — instead of hand-picked examples, each test asserts an
+**invariant** over 500 randomly generated calendar dates, and any counterexample is
+automatically shrunk to its minimal form (e.g. a single day across a month / year /
+leap-day boundary). Checked properties include:
+
+- `eachDayInRange` — empty iff `to < from`, length `= daysUntil + 1`, one-day steps, all days in range and distinct
+- `stayNights` — check-in inclusive / check-out exclusive (never sleeps on the checkout day)
+- `nightCount` — never negative; `nightCount(a, a + n) === max(n, 0)`
+- `toIsoKey` — always `YYYY-MM-DD`, round-trips through the ISO codec, and is injective
 
 By default the widget runs against an in-memory mock adapter. Set `VITE_API_URL`
 to point the (Schema-decoded) HTTP adapter at a real backend.
